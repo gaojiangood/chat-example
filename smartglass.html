@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Smart Glasses</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/style/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- header row-->
+        <div class="row">
+            <div class="col-xs-3">
+                <p>検査者:</p>
+            </div>
+            <div class="col-xs-3">
+                <p>検査太郎</p>
+            </div>
+            <div class="col-xs-3">
+                <p>シャーシNo.:</p>
+            </div>
+            <div class="col-xs-3">
+                <p>JNCU 025614</p>
+            </div>
+        </div>
+        <!-- 検査項目 row-->
+        <div class="row">
+            <div class="col-xs-4">
+            </div>
+            <div class="col-xs-8" style="vertical-align:middle">
+                <p id="item1">1.ESCOT作動正常？</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4" style="vertical-align:middle">
+                <p>検査項目：</p>
+            </div>
+            <div class="col-xs-8">
+                <label style="background:#009933;color:#FFFFFF;vertical-align:middle">
+                    <strong id="item2">2.オートクルーズあり?</strong>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">
+            </div>
+            <div class="col-xs-8" style="vertical-align:middle">
+                <p id="item3">3.ABS、EBSあり?</p>
+            </div>
+        </div>
+        <!-- 検査結果 row-->
+        <div class="row">
+            <div class="col-xs-4">
+                <p>検査結果：</p>
+            </div>
+            <div class="col-xs-8">
+                <label><strong>はい</strong></label>
+            </div>
+        </div>
+        <!-- footer row-->
+        <div class="row">
+            <div class="col-xs-8">
+                <div class="btn-group">
+                    <button id="btnBack" type="button" class="btn btn-success btn-xs">戻る</button>
+                    <button id="btnNext" type="button" class="btn btn-success btn-xs">次へ</button>
+                    <button id="btnRepeat" type="button" class="btn btn-success btn-xs">もう一度</button>
+                    <button id="btnSkip" type="button" class="btn btn-success btn-xs">スキップ</button>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <button type="button" class="btn btn-success btn-xs">ヘルプ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            var items = new Array();
+            items.push('1.ESCOT作動正常？');
+            items.push('2.オートクルーズあり?');
+            items.push('3.ABS、EBSあり?');
+            items.push('4.ABS、EBSあり?');
+            items.push('5.ABS、EBSあり?');
+            var socket = io();
+
+            socket.on('connect', () => {
+                console.log('connect');
+
+            });
+            socket.on('disconnect', () => {
+                console.log('disconnect');
+            });
+
+            socket.on('next', function(msg){
+              console.log('msg from server:'+msg);
+            });
+
+
+
+            $("#btnNext").click(function() {
+                items.push(items.shift());
+                $("#item1").text(items[0]);
+                $("#item2").text(items[1]);
+                $("#item3").text(items[2]);
+
+                socket.emit('next', items[1]);
+                return false;
+            });
+            $("#btnBack").click(function() {
+                items.unshift(items.pop());
+                $("#item1").text(items[0]);
+                $("#item2").text(items[1]);
+                $("#item3").text(items[2]);
+            });
+        });
+        //
+    </script>
+
+</body>
+
+</html>

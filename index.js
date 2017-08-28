@@ -8,8 +8,8 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/index2', function(req, res){
-  res.sendFile(__dirname + '/index2.html');
+app.get('/smartglass', function(req, res){
+  res.sendFile(__dirname + '/smartglass.html');
 });
 
 io.on('connection', function(socket){
@@ -19,6 +19,10 @@ io.on('connection', function(socket){
   socket.on('chat message', function(msg){
     console.log('message inputed :'+msg);
     io.emit('chat message', msg);
+    io.emit('next', msg);
+  });
+  socket.on('next', function(msg){
+    console.log('next fired :'+msg);
   });
   socket.on('disconnect', function(socket){
     console.log('a user logouted.');
